@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الامتحان الأول - الوحدة الثانية - المعلم محمد تيسير الخرشة</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            color: #333333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        input {
+            -webkit-user-select: text !important;
+            user-select: text !important;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 800px;
+            padding: 30px;
+        }
+
+        .welcome-card {
+            text-align: center;
+        }
+
+        .welcome-card h1 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .welcome-card h3 {
+            color: #3498db;
+            margin-top: 5px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #3498db;
+        }
+
+        .btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        .btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .error-msg {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+            text-align: right;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .reading-text {
+            background-color: #f8f9fa;
+            border-right: 4px solid #3498db;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            font-size: 15px;
+            line-height: 1.6;
+            max-height: 200px;
+            overflow-y: auto;
+            direction: ltr;
+            text-align: left;
+            white-space: pre-line;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .underline-bold {
+            text-decoration: underline;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .option-btn {
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px 18px;
+            text-align: left;
+            direction: ltr;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            background-color: #eef2f5;
+        }
+
+        .option-btn.selected {
+            border-color: #3498db;
+            background-color: #ebf5fb;
+            font-weight: bold;
+        }
+
+        .result-card {
+            text-align: center;
+        }
+
+        .score-box {
+            font-size: 48px;
+            font-weight: bold;
+            color: #3498db;
+            margin: 20px 0;
+        }
+
+        .review-list {
+            margin-top: 30px;
+            text-align: left;
+            direction: ltr;
+        }
+
+        .review-item {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #fafafa;
+        }
+
+        .review-item.correct-item {
+            border-left: 5px solid #2ecc71;
+        }
+
+        .review-item.wrong-item {
+            border-left: 5px solid #e74c3c;
+        }
+
+        .review-q {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .correct-text { color: #2ecc71; font-weight: bold; }
+        .wrong-text { color: #e74c3c; font-weight: bold; }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+    <div class="container">
+        <!-- 1. شاشة الغلاف ودخول الطالب -->
+        <div id="welcomeScreen" class="welcome-card">
+            <h1>الامتحان الأول - الوحدة الثانية</h1>
+            <h3>المعلم: محمد تيسير الخرشة</h3>
+            <div class="form-group">
+                <label for="studentName">اسم الطالب الثلاثي:</label>
+                <input type="text" id="studentName" placeholder="أدخل اسمك الثلاثي هنا..." autocomplete="off">
+                <div id="nameError" class="error-msg">⚠️ يرجى إدخال اسمك الثلاثي لبدء الامتحان.</div>
+            </div>
+            <button type="button" class="btn" onclick="startQuiz()">بدء الامتحان</button>
+        </div>
+
+        <!-- 2. شاشة الأسئلة -->
+        <div id="quizScreen" class="hidden">
+            <div class="quiz-header">
+                <div>الطالب: <span id="displayName" style="font-weight: bold; color: #2c3e50;"></span></div>
+                <div>السؤال <span id="currentQNum">1</span> من <span id="totalQNum">0</span></div>
+            </div>
+
+            <div id="readingSection" class="reading-text hidden"></div>
+            <div id="questionText" class="question-text"></div>
+            <div id="optionsContainer" class="options-container"></div>
+
+            <button id="nextBtn" class="btn" onclick="nextQuestion()" disabled>السؤال التالي</button>
+        </div>
+
+        <!-- 3. شاشة النتيجة النهائية -->
+        <div id="resultScreen" class="result-card hidden">
+            <h2>نتيجة الامتحان</h2>
+            <p>عزيزي الطالب: <strong id="resultStudentName"></strong></p>
+            <div class="score-box"><span id="score">0</span> / 100</div>
+            <p id="feedbackText"></p>
+            
+            <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
+            
+            <h3 style="text-align: right;">مراجعة الإجابات والحلول الصحيحة:</h3>
+            <div id="reviewContainer" class="review-list"></div>
+        </div>
+    </div>
+
+    <script>
+        var blobfishText = "With its tiny eyes, big mouth and slimy pink body, the blobfish is far from attractive. This marine creature lives deep in the ocean, where the pressure is very high. As a result, it has tiny fins and no skeleton, which keeps it from being crushed by the water pressure.";
+        
+        var ayeAyeText = "With its tiny eyes, big mouth and slimy pink body, the blobfish is far from attractive... Other creatures become endangered precisely because people find them ugly. Take the aye aye for example. Found only on the island of Madagascar, the aye aye is the world’s largest nocturnal primate. During the day they sleep in nests in the trees, coming out to hunt at night. They are solitary creatures, furry, and harmless...";
+
+        var pangolinText = "The threat faced by the pangolin, however, is far from accidental. They are more often targeted by poachers than any other animal in the world. Unique among mammals, it is covered in scales, like a reptile. They may not look very cuddly or cute, but these scales are highly prised in traditional Chinese medicine, which has caused the population of pangolins in China to fall by around 90% since the 1960s. Their scales protect them from their natural predators, but it’s simple for a poacher to just pick them up.";
+
+        var koalasText = "Koalas are widely recognized as one of Australia’s most iconic marsupials, yet they face severe mounting pressures due to rapid habitat loss and climate change. Because eucalyptus leaves—their primary and almost exclusive source of nourishment—offer very little nutritional value, koalas must spend the vast majority of their day resting and conserving energy. Unfortunately, as expanding urban developments and frequent bushfires fragment their native eucalyptus forests, these vulnerable animals are increasingly forced to cross open ground, making them extremely susceptible to domestic dog attacks and vehicular collisions.";
+
+        var rawQuestions = [
+            { q: "__________is the greatest threat to endangered species which are close to extinction[cite: 5].", options: ["Habitat lose", "Renewable energy", "Vehicle emissions", "Industrial waste"], ans: 0 },
+            { q: "__________________ damages buildings, forests, and kills fish[cite: 5].", options: ["Greenhouse gases", "Acid rain", "Global warming", "Vehicle emissions"], ans: 1 },
+            { q: "Soil _______________happens when the plants and trees that keep it in place are destroyed by the elements or man[cite: 5].", options: ["fumes", "layer", "erosion", "emissions"], ans: 2 },
+            { q: "Below average rainfall can result in water______________[cite: 5].", options: ["abundance", "flood", "evaporate", "scarcity"], ans: 3 },
+            { q: "The disappearance of areas that are home to plants and animals is called loss of __________[cite: 5]", options: ["hebitat", "habetat", "habitet", "habitat"], ans: 3 },
+            { q: "The compound noun ”renewable energy” is made up of _________[cite: 5]", options: ["noun-noun", "noun-adjective", "adjective-verb", "adjective-noun"], ans: 3 },
+            { q: "The first stressed word in the compound nouns below is _________[cite: 5]", options: ["endanger species", "industrial waste", "climate change", "toxic water"], ans: 1 },
+            { q: "He_______________ probably be late, as usual[cite: 5].", options: ["is going to", "will", "is", "was"], ans: 1 },
+            { q: "By 2050, software _______________ to predict traffic jams[cite: 5].", options: ["is going to", "will have been able", "will be able", "will be"], ans: 2 },
+            { q: "On second thoughts, I think I’ll leave it till the weekend.\nThe underlined words in the sentence above are used to describe ………[cite: 5]", options: ["a decision made at the moment of speaking", "a prediction based on evidence", "an activity in progress at a specific time in the future", "an activity which will be completed by a specific time"], ans: 0 },
+            { q: "My grandfather is 89 years old, but he’s in great shape, so I’m sure he ______ to be 100[cite: 5]", options: ["will live", "are going to live", "will lived", "is going to live"], ans: 3 },
+            { q: "Look at the dark clouds in the sky. It_______________ rain[cite: 5].", options: ["is going to", "will", "isn’t going to", "wont"], ans: 0 },
+            { q: "This time next week, you ______your presentation about climate change but you won’t have finished yet![cite: 5]", options: ["will be giving", "give", "be giving", "will give"], ans: 0 },
+            { q: "By the time I get on the train next Saturday, I_________ this trip for two months![cite: 5]", options: ["’ll plan", "’ ll be planning", "'ll have been plan", "'ll have been planning"], ans: 3 },
+            { q: "Driverless cars will almost certainly reduce the number of road accidents.\n-The sentence which has the same meaning to the one above is……..…[cite: 5]", options: ["Driverless cars are unlikely to reduce the number of road accidents.", "Driverless cars are probably to reduce the number of road accidents.", "Driverless cars are sure to reduce the number of road accidents.", "Driverless cars are improbable to reduce the number of road accidents."], ans: 2 },
+            { q: "The human race probably won’t go and live on another planet.\n-The sentence which has the same meaning to the one above is……[cite: 5]", options: ["The human race is likely to go and live on another planet.", "The human race is unlikely go and live on another planet.", "The human race is certain to go and live on another planet.", "The human race is unlikely to go and live on another planet."], ans: 3 },
+            { q: "We’re sure that we will find a cure for cancer in the future.\n-The sentence which means the same as the first one is ……[cite: 5]", options: ["We’re are probable to find a cure for cancer in the future.", "We’re are improbable to find a cure for cancer in the future.", "We’re are unlikely to find a cure for cancer in the future.", "We’re are bound to find a cure for cancer in the future."], ans: 3 },
+            { q: "Oil prices will definitely rise next year.\n-The sentence which means the same as the first one is ……[cite: 5]", options: ["Oil prices are uncertain to rise next year.", "Oil prices are certain to rise next year.", "Oil prices are unlikely to rise next year.", "Oil prices are probable to rise next year."], ans: 1 },
+            { q: "You’ve done so much revision you’re _________ to pass your exams[cite: 5].", options: ["unsure", "bound", "unlikely", "uncertain"], ans: 1 },
+            { q: "Although we can’t be certain, we think the pool is________ to be busy today[cite: 5].", options: ["likely", "certainly", "sure", "definitely"], ans: 0 },
+            { q: "It________________ go on display to the public at the beginning of next week[cite: 5].", options: ["is planning to", "is about", "is due to", "are to"], ans: 2 },
+            { q: "I am just about to start working on a project to design a shop window display.\n-The underlined words in the sentence above is used to indicate ……[cite: 5]", options: ["official instructions or commands", "timetabled events", "future plans", "things happening very soon"], ans: 3 },
+            { q: "The King ______ open the new bridge in Zarqa[cite: 5].", options: ["is planning to", "is to", "to", "is"], ans: 1 },
+            { q: "The bridge was closed because of gale force winds.\n-The above sentence can be written as ……[cite: 5]", options: ["The bridge was closed due gale force winds", "The bridge was closed due to gale force winds", "The bridge was closed is to gale force winds", "The bridge was closed to gale force winds"], ans: 1 },
+            { q: "Global warming is certain to ______ water shortages[cite: 5].", options: ["result to", "due to", "leads to", "cause to"], ans: 3 },
+            { q: "This may have been ______ better education[cite: 5].", options: ["result", "consequence", "as a result", "caused by"], ans: 3 },
+            { q: "The ______ heat caused the pavement to melt![cite: 5]", options: ["high", "sub-zero", "blistering", "freak"], ans: 2 },
+            { q: "Those scorching temperatures continue south into Indonesia and Thailand, where it is particularly humid for the time of year – high______ in Vietnam too[cite: 5].", options: ["hot", "scorching", "humidity", "cold"], ans: 2 },
+            { q: "The weather is really weird. It’s____ cold one minute and then____ hot the next[cite: 5].", options: ["freezing / boiling", "sunny/ wind", "freak / blistering", "heavy / high"], ans: 0 },
+            { q: "Because of global warming, ________weather conditions are more common with periods of drought followed by_______________ rain[cite: 5].", options: ["freak/high", "freak / low", "blistering/ snow", "freak/ torrential"], ans: 3 },
+            { q: "I’m going to be talking about some common misunderstandings, and what the facts of the matter are………..\n- The language function to the sentence above is ……………………[cite: 5]", options: ["sequencing an argument", "indicating that the speaker is going to paraphrase what they just said", "introducing the topic", "concluding"], ans: 2 },
+            { q: "The second thing that people often tend to think whenever we happen to have sub-zero temperatures is that the Earth isn’t actually getting warmer.\n- The language function to the sentence above is ………[cite: 5]", options: ["sequencing an argument", "introducing the topic", "concluding", "indicating that the speaker is going to paraphrase what they just said"], ans: 0 },
+            { q: "So, to sum up, when talking about any benefits of climate change we have to ask ourselves who benefits and for how long?\n- The language function to the sentence above is ………[cite: 5]", options: ["sequencing an argument", "indicating that the speaker is going to paraphrase what they just said", "introducing the topic", "concluding"], ans: 3 },
+            { q: "I’m ______ the fence about it to be honest[cite: 5].", options: ["over", "on", "in", "under"], ans: 1 },
+            { q: "OK, but another ______ might be to wait a bit longer[cite: 5].", options: ["option", "decision", "mind", "grab"], ans: 0 },
+            { q: "It looks as if we agree that the first poster is more suitable.\n-The sentence above is used to express …[cite: 5]", options: ["indecision", "an agreement", "disagreement", "reaching a decision"], ans: 1 },
+            { q: "I can’t put my finger on it, but something’s not right with it.\n-The sentence above is used to express …[cite: 5]", options: ["indecision", "an agreement", "disagreement", "reaching a decision"], ans: 0 },
+            { q: "I think we’re on the wrong track.\n-The sentence above is used to express …………………………….[cite: 5]", options: ["indecision", "an agreement", "disagreement", "reaching a decision"], ans: 2 },
+            { q: "You state your reasons for writing in the formal letter …….[cite: 5]", options: ["in the introduction", "in the main paragraphs", "in the final paragraph", "before you sign off"], ans: 1 },
+            { q: "Get rid of plastic packaging! \n- Replace the underlined word with more formal word ……………………………[cite: 5]", options: ["banned", "tell", "concerned", "important"], ans: 0 },
+            
+            // أسئلة النصوص القرائية
+            { passage: blobfishText, q: "Mention two ways in which the blobfish is adapted to living deep in the ocean[cite: 5].", options: ["It has large eyes and a hard skeleton to withstand ocean currents.", "It has tiny fins and no skeleton to keep it from being crushed by water pressure.", "It has thick scales and sharp teeth to hunt deep-sea prey.", "It has bright pink skin and large fins to swim quickly."], ans: 1 },
+            { passage: ayeAyeText, q: "Write down two animals that are described as unattractive in the text[cite: 5].", options: ["The giant panda and the pangolin", "The blobfish and the aye-aye", "The pangolin and the blobfish", "The aye-aye and the giant panda"], ans: 1 },
+            { passage: pangolinText, q: "Write down two reasons why pangolins are endangered[cite: 5].", options: ["They are accidentally swept into fishing nets and suffer from natural climate change.", "They are targeted by poachers and their scales are highly prized in traditional Chinese medicine.", "They are considered an omen of bad luck and hunted for their meat.", "They have no skeleton and cannot survive deep ocean water pressure."], ans: 1 },
+            { passage: pangolinText, q: "Quote a sentence that shows how poachers easily catch pangolins[cite: 5].", options: ["\"They are more often targeted by poachers than any other animal in the world.\"", "\"Their scales protect them from their natural predators, but it’s simple for a poacher to just pick them up.\"", "\"Unique among mammals, it is covered in scales, like a reptile.\"", "\"The threat faced by the pangolin, however, is far from accidental.\""], ans: 1 },
+            { passage: ayeAyeText, q: "Find a word in the text which means awake and active at night, and what does the underlined word (they) refer to?[cite: 5]", options: ["Word: nocturnal; Refers to: the aye-aye", "Word: solitary; Refers to: the poachers", "Word: nocturnal; Refers to: the pangolins", "Word: harmless; Refers to: the blobfish"], ans: 0 },
+            { passage: koalasText, q: "Write down two reasons why koalas have to spend most of their time resting and conserving energy[cite: 5].", options: ["Because they live deep in ocean waters where water pressure is very high.", "Because eucalyptus leaves provide very little nutritional value.", "Because their scales protect them from natural predators in the forest.", "Because they are nocturnal primates that hunt only during the night."], ans: 1 }
+        ];
+
+        var questions = [];
+        var currentQIndex = 0;
+        var selectedAnswers = [];
+        var studentName = "";
+
+        function shuffleArray(array) {
+            var arr = array.slice();
+            for (var i = arr.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            return arr;
+        }
+
+        function startQuiz() {
+            var nameInput = document.getElementById('studentName').value.trim();
+            var errorMsg = document.getElementById('nameError');
+
+            if (!nameInput) {
+                errorMsg.style.display = 'block';
+                return;
+            }
+            
+            errorMsg.style.display = 'none';
+            studentName = nameInput;
+            document.getElementById('displayName').innerText = studentName;
+
+            questions = shuffleArray(rawQuestions);
+            
+            for (var i = 0; i < questions.length; i++) {
+                var q = questions[i];
+                var optionsWithIndex = [];
+                for (var j = 0; j < q.options.length; j++) {
+                    optionsWithIndex.push({ text: q.options[j], isCorrect: (j === q.ans) });
+                }
+                optionsWithIndex = shuffleArray(optionsWithIndex);
+                
+                var newOptions = [];
+                var newAns = 0;
+                for (var k = 0; k < optionsWithIndex.length; k++) {
+                    newOptions.push(optionsWithIndex[k].text);
+                    if (optionsWithIndex[k].isCorrect) {
+                        newAns = k;
+                    }
+                }
+                q.options = newOptions;
+                q.ans = newAns;
+            }
+
+            document.getElementById('welcomeScreen').className = 'welcome-card hidden';
+            document.getElementById('quizScreen').className = '';
+            document.getElementById('totalQNum').innerText = questions.length;
+
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            var currentQ = questions[currentQIndex];
+            document.getElementById('currentQNum').innerText = currentQIndex + 1;
+            
+            var readingSec = document.getElementById('readingSection');
+            if (currentQ.passage) {
+                readingSec.innerText = currentQ.passage;
+                readingSec.className = 'reading-text';
+            } else {
+                readingSec.className = 'reading-text hidden';
+            }
+
+            document.getElementById('questionText').innerHTML = currentQ.q;
+
+            var optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+
+            for (var i = 0; i < currentQ.options.length; i++) {
+                (function(idx) {
+                    var btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerHTML = String.fromCharCode(97 + idx) + ') ' + currentQ.options[idx];
+                    btn.onclick = function() { selectOption(idx); };
+                    if (selectedAnswers[currentQIndex] === idx) {
+                        btn.className = 'option-btn selected';
+                    }
+                    optionsContainer.appendChild(btn);
+                })(i);
+            }
+
+            document.getElementById('nextBtn').disabled = (selectedAnswers[currentQIndex] === undefined);
+            document.getElementById('nextBtn').innerText = (currentQIndex === questions.length - 1) ? "إنهاء الامتحان وتصدير النتيجة" : "السؤال التالي";
+        }
+
+        function selectOption(index) {
+            selectedAnswers[currentQIndex] = index;
+            var btns = document.querySelectorAll('.option-btn');
+            for (var i = 0; i < btns.length; i++) {
+                if (i === index) {
+                    btns[i].className = 'option-btn selected';
+                } else {
+                    btns[i].className = 'option-btn';
+                }
+            }
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function nextQuestion() {
+            if (selectedAnswers[currentQIndex] === undefined) return;
+
+            if (currentQIndex < questions.length - 1) {
+                currentQIndex++;
+                loadQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            document.getElementById('quizScreen').className = 'hidden';
+            document.getElementById('resultScreen').className = 'result-card';
+            document.getElementById('resultStudentName').innerText = studentName;
+
+            var correctCount = 0;
+            for (var i = 0; i < questions.length; i++) {
+                if (selectedAnswers[i] === questions[i].ans) {
+                    correctCount++;
+                }
+            }
+
+            var totalScore = Math.round((correctCount / questions.length) * 100);
+            document.getElementById('score').innerText = totalScore;
+
+            var feedback = document.getElementById('feedbackText');
+            if (totalScore >= 85) feedback.innerText = "ممتاز! أداء رائع جداً ومتميز.";
+            else if (totalScore >= 70) feedback.innerText = "جيد جداً! عمل رائع.";
+            else if (totalScore >= 50) feedback.innerText = "مقبول، يحتاج للتركيز والمراجعة بشكل أفضل.";
+            else feedback.innerText = "للأسف! النتيجة غير كافية، يرجى إعادة دراسة المادة جيداً.";
+
+            var reviewContainer = document.getElementById('reviewContainer');
+            reviewContainer.innerHTML = '';
+
+            for (var i = 0; i < questions.length; i++) {
+                var q = questions[i];
+                var isCorrect = (selectedAnswers[i] === q.ans);
+                var item = document.createElement('div');
+                item.className = 'review-item ' + (isCorrect ? 'correct-item' : 'wrong-item');
+
+                var optionsHtml = '';
+                for (var j = 0; j < q.options.length; j++) {
+                    var label = String.fromCharCode(97 + j);
+                    if (j === q.ans) {
+                        optionsHtml += '<div class="correct-text">✓ ' + label + ') ' + q.options[j] + ' (الإجابة الصحيحة)</div>';
+                    } else if (j === selectedAnswers[i] && !isCorrect) {
+                        optionsHtml += '<div class="wrong-text">✗ ' + label + ') ' + q.options[j] + ' (إجابتك)</div>';
+                    } else {
+                        optionsHtml += '<div>' + label + ') ' + q.options[j] + '</div>';
+                    }
+                }
+
+                item.innerHTML = '<div class="review-q">Q' + (i + 1) + ': ' + q.q + '</div><div>' + optionsHtml + '</div>';
+                reviewContainer.appendChild(item);
+            }
+        }
+    </script>
+</body>
+</html>
